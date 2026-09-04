@@ -1,5 +1,9 @@
 # tree-math: mathematical operations for JAX pytrees
 
+This repository is the maintained home of tree-math since version 0.3.0;
+the original [google/tree-math](https://github.com/google/tree-math)
+repository is archived.
+
 tree-math makes it easy to implement numerical algorithms that work on
 [JAX pytrees](https://jax.readthedocs.io/en/latest/pytrees.html), such as
 iterative methods for optimization and equation solving. It does so by providing

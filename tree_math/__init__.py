@@ -24,4 +24,4 @@ from tree_math._src.structs import struct
 from tree_math._src.vector import Vector, VectorMixin
 import tree_math.numpy
 
-__version__ = '0.2.1'
+__version__ = '0.3.0'

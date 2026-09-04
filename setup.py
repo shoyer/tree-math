@@ -18,6 +18,7 @@ import setuptools
 
 base_requires = [
     'jax',
+    'typing_extensions; python_version < "3.11"',
 ]
 tests_requires = [
     'absl-py',
@@ -26,10 +27,15 @@ tests_requires = [
     'pytest',
 ]
 
+with open('README.md') as f:
+  long_description = f.read()
+
 setuptools.setup(
     name='tree-math',
     description='Mathematical operations for JAX pytrees',
-    version='0.2.1',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    version='0.3.0',
     license='Apache 2.0',
     author='Google LLC',
     author_email='noreply@google.com',
@@ -37,7 +43,11 @@ setuptools.setup(
     extras_require={
         'tests': tests_requires,
     },
-    url='https://github.com/google/tree-math',
+    url='https://github.com/shoyer/tree-math',
+    project_urls={
+        'Source': 'https://github.com/shoyer/tree-math',
+        'Bug Tracker': 'https://github.com/shoyer/tree-math/issues',
+    },
     packages=setuptools.find_packages(),
-    python_requires='>=3',
+    python_requires='>=3.10',
 )

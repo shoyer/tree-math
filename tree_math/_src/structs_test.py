@@ -104,6 +104,11 @@ class StructsTest(test_util.TestCase):
     np.testing.assert_allclose(jitted.a, unjitted.a)
     np.testing.assert_allclose(jitted.b, unjitted.b)
 
+  def testDataclassTransform(self):
+    # marks `struct` for static type checkers (PEP 681), so that they see the
+    # generated dataclass constructor instead of `object.__init__`.
+    self.assertTrue(hasattr(tree_math.struct, '__dataclass_transform__'))
+
   def testPickle(self):
     struct = TestStruct(1, 2)
     restored = pickle.loads(pickle.dumps(struct))

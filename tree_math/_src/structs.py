@@ -17,14 +17,21 @@ import dataclasses
 import jax
 from tree_math._src.vector import VectorMixin
 
+try:
+  from typing import dataclass_transform  # Python 3.11+
+except ImportError:
+  from typing_extensions import dataclass_transform
 
+
+@dataclass_transform()
 def struct(cls):
   """Class decorator that enables JAX function transforms as well as tree math.
 
   Decorating a class with `@struct` makes it a dataclass that is compatible
   with arithmetic infix operators like `+`, `-`, `*` and `/`. The decorated
   class is also a valid pytree, making it compatible with JAX function
-  transformations such as `jit` and `grad`.
+  transformations such as `jit` and `grad`. Static type checkers recognize
+  the decorated class as a dataclass, including its generated constructor.
 
   Example usage:
   ```
