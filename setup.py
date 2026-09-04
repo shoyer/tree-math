@@ -18,6 +18,7 @@ import setuptools
 
 base_requires = [
     'jax',
+    'typing_extensions; python_version < "3.11"',
 ]
 tests_requires = [
     'absl-py',
@@ -29,7 +30,7 @@ tests_requires = [
 setuptools.setup(
     name='tree-math',
     description='Mathematical operations for JAX pytrees',
-    version='0.2.1',
+    version='0.3.0',
     license='Apache 2.0',
     author='Google LLC',
     author_email='noreply@google.com',
