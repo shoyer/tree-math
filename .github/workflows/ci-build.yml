@@ -1,45 +1,47 @@
 name: CI
 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  build:
+  pytest-job:
+    name: "python ${{ matrix.python-version }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.7", "3.9"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-    - name: Cancel previous
-      uses: styfle/cancel-workflow-action@0.7.0
-      with:
-        access_token: ${{ github.token }}
-      if: ${{github.ref != 'refs/head/main'}}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Get pip cache dir
-      id: pip-cache
-      run: |
-        python -m pip install --upgrade pip wheel
-        echo "::set-output name=dir::$(pip cache dir)"
-    - name: pip cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ steps.pip-cache.outputs.dir }}
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
-    - name: Install jax-tree-math
+        cache: 'pip'
+    - name: Install tree-math
       run: |
         pip install -e .[tests]
     - name: Run unit tests
       run: |
-        pytest tree_math
+        pytest -v tree_math
+
+  # Auto-publish to PyPI when the version is increased (requires the
+  # PYPI_API_TOKEN repository secret).
+  publish-job:
+    if: |
+      github.repository == 'shoyer/tree-math'
+      && github.ref == 'refs/heads/main'
+    needs: pytest-job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 30
+    steps:
+    - uses: etils-actions/pypi-auto-publish@v1
+      with:
+        pypi-token: ${{ secrets.PYPI_API_TOKEN }}
+        gh-token: ${{ secrets.GITHUB_TOKEN }}
